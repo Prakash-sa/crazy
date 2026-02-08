@@ -145,7 +145,7 @@ export default function Home() {
         <div className="card-glow" />
         <div className="card">
           <p className="letter-seal">Hogsmeade Owl Post</p>
-          <h1>Will You Be My Valentine?</h1>
+          <h1>Hi Vibha, Will You Be My Valentine?</h1>
           <p className="message">
             If love is the strongest magic, then I want to cast mine with you.
             Meet me under the enchanted sky and let us write our own story.
