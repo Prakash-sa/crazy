@@ -65,6 +65,7 @@ body {
   width: min(90vw, 780px);
   transform-style: preserve-3d;
   transition: transform 0.25s ease-out;
+  z-index: 4;
 }
 
 .card-shell:hover {
@@ -201,7 +202,43 @@ button:active {
 }
 
 .accepted .card {
-  animation: pulse-glow 2s ease-in-out infinite;
+  animation: pulse-glow 2s ease-in-out infinite, celebration-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.screen-celebration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.celebration-bit {
+  position: absolute;
+  top: -8vh;
+  left: 0;
+  display: block;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.celebration-bit.confetti {
+  width: 14px;
+  height: 20px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #ffd76a 0%, #ff7ab6 100%);
+  box-shadow: 0 0 15px rgba(255, 215, 106, 0.8), 0 0 25px rgba(255, 122, 182, 0.6);
+  animation: celebration-fall-sway 2.5s ease-out forwards !important;
+}
+
+.celebration-bit.spark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7da 0%, #ffd76a 60%, #ff7ab6 100%);
+  box-shadow: 0 0 20px rgba(255, 233, 160, 1), 0 0 40px rgba(255, 122, 182, 0.8);
+  animation: celebration-fall-spark 2.5s ease-out forwards !important;
 }
 
 @keyframes drift {
@@ -213,6 +250,63 @@ button:active {
   50% {
     transform: translate3d(0, -26px, 30px);
     opacity: 1;
+  }
+}
+
+@keyframes celebration-fall {
+  0% {
+    transform: translateY(0) rotateZ(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh) rotateZ(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-bounce {
+  0% {
+    transform: translateZ(45px) scale(1);
+  }
+  50% {
+    transform: translateZ(45px) scale(1.08);
+  }
+  100% {
+    transform: translateZ(45px) scale(1);
+  }
+}
+
+@keyframes celebration-fall-sway {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotateZ(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(25vh) translateX(80px) rotateZ(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(75vh) translateX(-40px) rotateZ(540deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(0) rotateZ(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-fall-spark {
+  0% {
+    transform: translateY(-10vh) translateX(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) translateX(-100px) scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh) translateX(0) scale(0);
+    opacity: 0;
   }
 }
 
@@ -230,6 +324,20 @@ button:active {
       0 0 34px rgba(215, 170, 79, 0.35),
       inset 0 0 0 3px rgba(75, 29, 22, 0.3),
       inset 0 12px 26px rgba(255, 248, 228, 0.55);
+  }
+}
+
+@keyframes celebration-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-5vh) rotate(0deg) scale(0.7);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(110vh) rotate(360deg) scale(1);
   }
 }
 

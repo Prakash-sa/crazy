@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import confetti from "canvas-confetti";
 import Three3D from "./Three3D";
 
 export default function Home() {
@@ -20,13 +21,27 @@ export default function Home() {
       })),
     []
   );
+  const celebrationBits = useMemo(
+    () =>
+      Array.from({ length: 50 }, (_, i) => ({
+        id: i,
+        left: (i * 7.2) % 100,
+        delay: (i % 10) * 0.1,
+        duration: 2.5 + (i % 5) * 0.3,
+        rotate: (i * 41) % 360
+      })),
+    []
+  );
 
   const noButtonText = [
-    "No",
+    "No.",
+    "Sorry — it won't happen again.",
+    "Not even for momos?",
     "Are you sure?",
-    "Think again",
+    "Not even for pani puri?",
+    "Think again…",
     "Please?",
-    "The owls are waiting",
+    "The owls are waiting 🦉",
     "Still no?"
   ];
 
@@ -52,6 +67,30 @@ export default function Home() {
   const handleYesClick = async () => {
     setAccepted(true);
     setMailStatus("sending");
+
+    // Trigger confetti animation
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+
+    // Additional confetti bursts
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        spread: 100,
+        origin: { x: 0.2, y: 0.5 }
+      });
+    }, 200);
+
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        spread: 100,
+        origin: { x: 0.8, y: 0.5 }
+      });
+    }, 400);
 
     try {
       const res = await fetch("/api/send-valentine", { method: "POST" });
@@ -81,6 +120,21 @@ export default function Home() {
           }}
         />
       ))}
+      {accepted && (
+        <div className="screen-celebration" aria-hidden="true">
+          {celebrationBits.map((bit) => (
+            <span
+              key={bit.id}
+              className={`celebration-bit ${bit.id % 3 === 0 ? "spark" : "confetti"}`}
+              style={{
+                left: `${bit.left}%`,
+                animationDelay: `${bit.delay}s`,
+                transform: `rotate(${bit.rotate}deg)`
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <section
         className={`card-shell ${accepted ? "accepted" : ""}`}
