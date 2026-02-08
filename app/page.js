@@ -1,0 +1,99 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Three3D from "./Three3D";
+
+export default function Home() {
+  const [accepted, setAccepted] = useState(false);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [noClicks, setNoClicks] = useState(0);
+
+  const floatingLights = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        x: (i * 13) % 100,
+        y: (i * 19) % 100,
+        delay: (i % 6) * 0.35,
+        scale: 0.6 + (i % 4) * 0.25
+      })),
+    []
+  );
+
+  const noButtonText = [
+    "No",
+    "Are you sure?",
+    "Think again",
+    "Please?",
+    "The owls are waiting",
+    "Still no?"
+  ];
+
+  useEffect(() => {
+    const handleMove = (event) => {
+      const x = (event.clientY / window.innerHeight - 0.5) * -12;
+      const y = (event.clientX / window.innerWidth - 0.5) * 12;
+      setRotation({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, []);
+
+  const noButtonLabel = noButtonText[Math.min(noClicks, noButtonText.length - 1)];
+
+  return (
+    <main className="scene">
+      <Three3D />
+      <div className="stars" />
+
+      {floatingLights.map((light) => (
+        <span
+          key={light.id}
+          className="floating-light"
+          style={{
+            left: `${light.x}%`,
+            top: `${light.y}%`,
+            animationDelay: `${light.delay}s`,
+            transform: `scale(${light.scale})`
+          }}
+        />
+      ))}
+
+      <section
+        className={`card-shell ${accepted ? "accepted" : ""}`}
+        style={{
+          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
+        }}
+      >
+        <div className="card-glow" />
+        <div className="card">
+          <p className="letter-seal">Hogsmeade Owl Post</p>
+          <h1>Will You Be My Valentine?</h1>
+          <p className="message">
+            If love is the strongest magic, then I want to cast mine with you.
+            Meet me under the enchanted sky and let us write our own story.
+          </p>
+
+          {!accepted ? (
+            <div className="actions">
+              <button className="yes" onClick={() => setAccepted(true)}>
+                Yes, always
+              </button>
+              <button className="no" onClick={() => setNoClicks((prev) => prev + 1)}>
+                {noButtonLabel}
+              </button>
+            </div>
+          ) : (
+            <div className="accepted-box">
+              <h2>She said yes.</h2>
+              <p>
+                Mischief managed. Your date at the Three Broomsticks begins now.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}
