@@ -134,6 +134,8 @@ h1 {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 button {
@@ -144,7 +146,8 @@ button {
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, padding 0.3s ease;
+  white-space: nowrap;
 }
 
 button:hover {
@@ -159,6 +162,7 @@ button:active {
   background: linear-gradient(180deg, #6e1f17, #4a130f);
   color: #ffe6d0;
   box-shadow: 0 8px 20px rgba(74, 19, 15, 0.32);
+  flex: 0 0 auto;
 }
 
 .yes:hover {
@@ -170,6 +174,8 @@ button:active {
   background: linear-gradient(180deg, #d2b072, #bb9556);
   color: #2f1f12;
   box-shadow: 0 8px 18px rgba(120, 90, 40, 0.24);
+  flex: 0 0 auto;
+  min-width: fit-content;
 }
 
 .no:hover {
@@ -239,9 +245,18 @@ button:active {
 
   .actions {
     flex-direction: column;
+    width: 100%;
   }
 
   button {
+    width: 100%;
+  }
+
+  .yes {
+    width: 100%;
+  }
+
+  .no {
     width: 100%;
   }
 }

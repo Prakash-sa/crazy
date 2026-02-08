@@ -179,7 +179,81 @@ export default function Three3D() {
 
     scene.add(castleGroup);
 
-    // Floating love hearts
+    // Create flying witches/wizards on broomsticks
+    const broomRiders = [];
+    const createBroomRider = (startX, startY, startZ) => {
+      const riderGroup = new THREE.Group();
+      
+      // Broomstick
+      const broomHandle = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, 0.4, 8),
+        new THREE.MeshPhongMaterial({ color: 0x8B4513, shininess: 20 })
+      );
+      broomHandle.rotation.z = Math.PI / 4;
+      riderGroup.add(broomHandle);
+
+      // Broomstraw
+      const broomStraw = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.08, 0.05),
+        new THREE.MeshPhongMaterial({ color: 0xDAA520, shininess: 10 })
+      );
+      broomStraw.position.set(0.1, -0.25, 0);
+      broomStraw.rotation.z = Math.PI / 4;
+      riderGroup.add(broomStraw);
+
+      // Wizard/Witch body (simple)
+      const bodyGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+      const bodyMaterial = new THREE.MeshPhongMaterial({ 
+        color: Math.random() > 0.5 ? 0x8B0000 : 0x4B0082,
+        shininess: 30
+      });
+      const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+      body.position.y = 0.15;
+      riderGroup.add(body);
+
+      // Hat (cone)
+      const hatGeometry = new THREE.ConeGeometry(0.1, 0.2, 8);
+      const hatMaterial = new THREE.MeshPhongMaterial({ color: 0x1a1a1a });
+      const hat = new THREE.Mesh(hatGeometry, hatMaterial);
+      hat.position.set(0, 0.35, 0);
+      riderGroup.add(hat);
+
+      // Robe/dress (torus or cone)
+      const robeGeometry = new THREE.ConeGeometry(0.12, 0.2, 8);
+      const robeMaterial = new THREE.MeshPhongMaterial({ 
+        color: Math.random() > 0.5 ? 0x228B22 : 0xFF1493,
+        opacity: 0.9,
+        transparent: true
+      });
+      const robe = new THREE.Mesh(robeGeometry, robeMaterial);
+      robe.position.y = 0.05;
+      riderGroup.add(robe);
+
+      riderGroup.position.set(startX, startY, startZ);
+      
+      return {
+        group: riderGroup,
+        orbitRadius: Math.sqrt(startX * startX + startZ * startZ),
+        orbitSpeed: 0.3 + Math.random() * 0.4,
+        angle: Math.atan2(startZ, startX),
+        verticalSpeed: (Math.random() - 0.5) * 0.05,
+        verticalPos: startY
+      };
+    };
+
+    // Create multiple broomstick riders orbiting the castle
+    for (let i = 0; i < 4; i++) {
+      const angle = (i / 4) * Math.PI * 2;
+      const radius = 3 + Math.random() * 1;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      const y = 1 + Math.random() * 1;
+      
+      const rider = createBroomRider(x, y, z);
+      broomRiders.push(rider);
+      scene.add(rider.group);
+    }
+
     const hearts = [];
     for (let i = 0; i < 15; i++) {
       const heartGroup = new THREE.Group();
@@ -290,6 +364,27 @@ export default function Three3D() {
         if (Math.abs(heart.mesh.position.z) > 3) heart.speedZ *= -1;
       });
 
+      // Update broomstick riders - orbit around castle
+      broomRiders.forEach(rider => {
+        rider.angle += rider.orbitSpeed * 0.01;
+        const x = Math.cos(rider.angle) * rider.orbitRadius;
+        const z = Math.sin(rider.angle) * rider.orbitRadius;
+        
+        // Vertical bobbing motion
+        rider.verticalPos += rider.verticalSpeed;
+        if (rider.verticalPos > 2 || rider.verticalPos < 0.5) {
+          rider.verticalSpeed *= -1;
+        }
+
+        rider.group.position.x = x;
+        rider.group.position.y = rider.verticalPos;
+        rider.group.position.z = z;
+
+        // Face direction of movement
+        rider.group.rotation.z = rider.angle;
+        rider.group.rotation.x = Math.sin(Date.now() * 0.001) * 0.2;
+      });
+
       renderer.render(scene, camera);
     };
 
@@ -320,6 +415,14 @@ export default function Three3D() {
       hearts.forEach(h => {
         h.mesh.geometry.dispose();
         h.mesh.material.dispose();
+      });
+
+      // Dispose broomstick riders
+      broomRiders.forEach(rider => {
+        rider.group.traverse(child => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) child.material.dispose();
+        });
       });
     };
   }, []);

@@ -7,6 +7,7 @@ export default function Home() {
   const [accepted, setAccepted] = useState(false);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [noClicks, setNoClicks] = useState(0);
+  const [mailStatus, setMailStatus] = useState("idle");
 
   const floatingLights = useMemo(
     () =>
@@ -41,6 +42,27 @@ export default function Home() {
   }, []);
 
   const noButtonLabel = noButtonText[Math.min(noClicks, noButtonText.length - 1)];
+  const noProgress = Math.min(noClicks / 8, 1);
+  const yesButtonScale = 1 + Math.min(noClicks, 10) * 0.15;
+  const yesButtonPadding = 0.75 + Math.min(noClicks, 10) * 0.08;
+  const yesButtonOpacity = 0.75 + noProgress * 0.25;
+  const noButtonOpacity = 1 - noProgress;
+  const noButtonScale = 1 - noProgress * 0.55;
+
+  const handleYesClick = async () => {
+    setAccepted(true);
+    setMailStatus("sending");
+
+    try {
+      const res = await fetch("/api/send-valentine", { method: "POST" });
+      if (!res.ok) {
+        throw new Error("Mail request failed");
+      }
+      setMailStatus("sent");
+    } catch {
+      setMailStatus("error");
+    }
+  };
 
   return (
     <main className="scene">
@@ -77,10 +99,27 @@ export default function Home() {
 
           {!accepted ? (
             <div className="actions">
-              <button className="yes" onClick={() => setAccepted(true)}>
+              <button 
+                className="yes" 
+                onClick={handleYesClick}
+                style={{ 
+                  transform: `scale(${yesButtonScale})`,
+                  transformOrigin: "center center",
+                  padding: `${yesButtonPadding}rem 1.2rem`,
+                  opacity: yesButtonOpacity
+                }}
+              >
                 Yes, always
               </button>
-              <button className="no" onClick={() => setNoClicks((prev) => prev + 1)}>
+              <button
+                className="no"
+                onClick={() => setNoClicks((prev) => prev + 1)}
+                style={{
+                  opacity: noButtonOpacity,
+                  transform: `scale(${noButtonScale})`,
+                  pointerEvents: noProgress >= 1 ? "none" : "auto"
+                }}
+              >
                 {noButtonLabel}
               </button>
             </div>
@@ -89,6 +128,11 @@ export default function Home() {
               <h2>She said yes.</h2>
               <p>
                 Mischief managed. Your date at the Three Broomsticks begins now.
+              </p>
+              <p>
+                {mailStatus === "sending" && "Sending email..."}
+                {mailStatus === "sent" && "Email sent to sainiprakash525@gmail.com"}
+                {mailStatus === "error" && "Could not send email. Check SMTP env settings."}
               </p>
             </div>
           )}
