@@ -40,8 +40,8 @@ export async function POST() {
       from: fromEmail,
       to: toEmail,
       subject: "She clicked Yes on your Valentine page",
-      text: "Valentine update: the Yes button was clicked.",
-      html: "<p>Valentine update: <strong>the Yes button was clicked.</strong></p>"
+      text: "Valentine update: Vibha clicked Yes button.",
+      html: "<p>Valentine update: <strong>Vibha clicked Yes button.</strong></p>"
     });
 
     return NextResponse.json({ 
