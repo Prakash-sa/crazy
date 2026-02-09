@@ -34,11 +34,11 @@ export default function Home() {
   );
 
   const noButtonText = [
-    "No.",
+    "No",
     "Sorry — it won't happen again.",
-    "Not even for momos?",
+    "Not even for Momos?",
     "Are you sure?",
-    "Not even for pani puri?",
+    "Not even for Pani Puri?",
     "Think again…",
     "Please?",
     "The owls are waiting 🦉",
@@ -145,10 +145,10 @@ export default function Home() {
         <div className="card-glow" />
         <div className="card">
           <p className="letter-seal">Hogsmeade Owl Post</p>
-          <h1>Hi Vibha, Will You Be My Valentine?</h1>
+          <h1>Hi Vibha, I'm sorry for what happened on Sunday.</h1>
           <p className="message">
-            If love is the strongest magic, then I want to cast mine with you.
-            Meet me under the enchanted sky and let us write our own story.
+            I left you alone and went with my friends instead of paying proper attention to you. I was still in a difficult phase and trying to recover. It won't happen again. 
+            Will you give me a second chance?
           </p>
 
           {!accepted ? (
@@ -163,7 +163,7 @@ export default function Home() {
                   opacity: yesButtonOpacity
                 }}
               >
-                Yes, always
+                Yes, I forgive you
               </button>
               <button
                 className="no"
@@ -181,7 +181,7 @@ export default function Home() {
             <div className="accepted-box">
               <h2>She said yes.</h2>
               <p>
-                Mischief managed. Your date at the Three Broomsticks begins now.
+                Thank you for giving me another chance. I promise to make things right.
               </p>
             </div>
           )}

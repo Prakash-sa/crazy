@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Will You Be My Valentine?",
-  description: "Harry Potter inspired Valentine proposal page"
+  title: "Sorry?",
+  description: "Harry Potter inspired Sorry page"
 };
 
 export default function RootLayout({ children }) {

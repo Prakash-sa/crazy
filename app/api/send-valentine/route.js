@@ -39,9 +39,9 @@ export async function POST() {
     await transporter.sendMail({
       from: fromEmail,
       to: toEmail,
-      subject: "She clicked Yes on your Valentine page",
-      text: "Valentine update: Vibha clicked Yes button.",
-      html: "<p>Valentine update: <strong>Vibha clicked Yes button.</strong></p>"
+      subject: "She clicked Yes on your Sorry page",
+      text: "Appology update: Vibha clicked Yes button and has forgiven you.",
+      html: "<p>Apology update: <strong>Vibha clicked Yes button and has forgiven you.</strong></p>"
     });
 
     return NextResponse.json({ 
