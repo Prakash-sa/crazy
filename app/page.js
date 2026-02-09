@@ -183,11 +183,6 @@ export default function Home() {
               <p>
                 Mischief managed. Your date at the Three Broomsticks begins now.
               </p>
-              <p>
-                {mailStatus === "sending" && "Sending email..."}
-                {mailStatus === "sent" && "Email sent to sainiprakash525@gmail.com"}
-                {mailStatus === "error" && "Could not send email. Check SMTP env settings."}
-              </p>
             </div>
           )}
         </div>
